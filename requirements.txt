@@ -1,0 +1,6 @@
+# Pip installs
+!pip install numpy pandas seaborn matplotlib scipy
+!pip install openpyxl
+!pip install yfinance
+!pip install numpy_financial
+!pip install ipywidgets
