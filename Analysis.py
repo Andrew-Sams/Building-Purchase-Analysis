@@ -151,7 +151,7 @@ def interactive_inputs():
     additional_annual_income_range = st.slider('Additional Annual Income Range', 0, 100000, (0, 50000), step=5000)
     additional_annual_costs_range = st.slider('Additional Annual Costs Range', 10000, 100000, (20000, 80000), step=5000)
     property_growth_rate_range = st.slider('Property Growth Rate Range', -0.1, 0.1, (-0.04, 0.06), step=0.01)
-    inflation_rate_range = st.slider('Inflation Rate Range', 0.0, 0.1, (0, 0.04), step=0.01)
+    inflation_rate_range = st.slider('Inflation Rate Range', 0.0, 0.1, (0.0, 0.04), step=0.01)
     years = st.slider('Years', 5, 30, 20)
     target_irr = st.slider('Target IRR', 0.05, 0.1, 0.065, step=0.005)
 
@@ -160,7 +160,6 @@ def interactive_inputs():
             additional_annual_income_range, additional_annual_costs_range, property_growth_rate_range,
             inflation_rate_range, years, target_irr)
 
-# Streamlit App Layout
 def main():
     st.title("Mortgage and Investment Analysis Tool")
 
