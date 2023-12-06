@@ -179,8 +179,15 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
     # Transpose the DataFrame to flip the axis
     df = df.T
     
-    # Apply formatting to remove decimal points
-    formatted_df = df.style.format("{:.0f}")
+    # Apply formatting for currency with thousand separators
+    formatted_df = df.style.format("${:,.0f}")
+    
+   # Function to apply bold font
+    def bold_rows(s):
+        return ['font-weight: bold' if row in ['Mean Net Upfront (Reserves)', 'Mean Net Annual Profit'] else '' for row in s.index]
+
+    # Apply the custom styling
+    formatted_df = formatted_df.apply(bold_rows, axis=1)
     
     # Display the table in Streamlit
     st.table(formatted_df)
