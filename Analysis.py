@@ -130,24 +130,42 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
 # Function to update and display plots adapted for Streamlit
 def update_plots(savings_amount, interest_rate_range, down_payment_percentage, closing_cost_percentage_range, additional_upfront_costs_range, annual_base_income_range, annual_base_expense_range, additional_annual_income_range, additional_annual_costs_range, property_growth_rate_range, inflation_rate_range, years, target_irr):
     purchase_prices = np.arange(1_000_000, 4_100_000, 100_000)
-    results = [run_simulations_with_savings_check(...) for price in purchase_prices]
+    results = [run_simulations_with_savings_check(
+        price,
+        savings_amount,
+        annual_base_income_range,
+        annual_base_expense_range,
+        down_payment_percentage,
+        interest_rate_range,
+        closing_cost_percentage_range,
+        additional_upfront_costs_range,
+        additional_annual_income_range,
+        additional_annual_costs_range,
+        property_growth_rate_range,
+        inflation_rate_range,
+        years,
+        target_irr
+    ) for price in purchase_prices]
 
     # Extracting the results
     favorable_percentages, average_irrs, percentages_above_target, mean_values = zip(*results)
 
+    # Transpose mean values to align with purchase prices
+    transposed_mean_values = list(zip(*mean_values))
+
     # Create a DataFrame for displaying the table
     data = {
         'Purchase Price': purchase_prices,
-        'Mean Down Payment': mean_values[0],
-        'Mean Closing Costs': mean_values[1],
-        'Mean Additional Upfront Costs': mean_values[2],
-        'Mean Net Upfront (Reserves)': mean_values[3],
-        'Mean Annual Mortgage Payment': mean_values[4],
-        'Mean Annual Base Expenses': mean_values[5],
-        'Mean Additional Annual Costs': mean_values[6],
-        'Mean Annual Base Income': mean_values[7],
-        'Mean Additional Annual Income': mean_values[8],
-        'Mean Net Annual Profit': mean_values[9]
+        'Mean Down Payment': transposed_mean_values[0],
+        'Mean Closing Costs': transposed_mean_values[1],
+        'Mean Additional Upfront Costs': transposed_mean_values[2],
+        'Mean Net Upfront (Reserves)': transposed_mean_values[3],
+        'Mean Annual Mortgage Payment': transposed_mean_values[4],
+        'Mean Annual Base Expenses': transposed_mean_values[5],
+        'Mean Additional Annual Costs': transposed_mean_values[6],
+        'Mean Annual Base Income': transposed_mean_values[7],
+        'Mean Additional Annual Income': transposed_mean_values[8],
+        'Mean Net Annual Profit': transposed_mean_values[9]
     }
     df = pd.DataFrame(data)
 
