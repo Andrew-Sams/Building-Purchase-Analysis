@@ -156,7 +156,7 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
     ) for price in purchase_prices]
 
     # Unpacking the results
-    (favorable_percentages, average_irrs, percentages_above_target_irr, mean_down_payments, mean_closing_costs, 
+    (favorable_percentages, average_irrs, percentages_above_target, mean_down_payments, mean_closing_costs, 
      mean_additional_upfront_costs, mean_net_upfronts, mean_annual_mortgage_payments, mean_annual_base_expenses, 
      mean_additional_annual_costs, mean_annual_base_incomes, mean_additional_annual_incomes, mean_net_annual_profits) = zip(*results)
 
@@ -174,8 +174,11 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
         'Mean Additional Annual Income': mean_additional_annual_incomes,
         'Mean Net Annual Profit': mean_net_annual_profits
     }
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(data
 
+    # Transpose the DataFrame to flip the axis
+    df = df.T
+                      
     # Display the table in Streamlit
     st.table(df)
 
