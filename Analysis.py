@@ -37,6 +37,10 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
         closing_costs = loan_amount * closing_cost_percentage
         initial_outlay = down_payment + closing_costs + additional_upfront_costs
 
+        # Calculate monthly mortgage payment
+        monthly_mortgage = calculate_mortgage(loan_amount, interest_rate)
+        annual_mortgage_payment = monthly_mortgage * 12
+
         # Check if savings are sufficient for initial outlay
         if savings < initial_outlay:
             continue  # Skip simulation as it's unfavorable
