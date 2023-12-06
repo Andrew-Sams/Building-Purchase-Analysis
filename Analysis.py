@@ -137,7 +137,7 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
 
 # Function to update and display plots adapted for Streamlit
 def update_plots(savings_amount, interest_rate_range, down_payment_percentage, closing_cost_percentage_range, additional_upfront_costs_range, annual_base_income_range, annual_base_expense_range, additional_annual_income_range, additional_annual_costs_range, property_growth_rate_range, inflation_rate_range, years, target_irr):
-    purchase_prices = np.arange(1_800_000, 3_100_000, 100_000)
+    purchase_prices = np.arange(1_800_000, 3_200_000, 200_000)
     results = [run_simulations_with_savings_check(
         price,
         savings_amount,
@@ -179,8 +179,11 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
     # Transpose the DataFrame to flip the axis
     df = df.T
     
+    # Apply formatting to remove decimal points
+    formatted_df = df.style.format("{:.0f}")
+    
     # Display the table in Streamlit
-    st.table(df)
+    st.table(formatted_df)
 
     # Plotting logic adapted for Streamlit
     fig, axs = plt.subplots(2, 1, figsize=(10, 16))
@@ -203,15 +206,15 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
 
 # Interactive Inputs Function
 def interactive_inputs():
-    savings_amount = st.slider('Savings Amount', 100000, 1000000, 600000, step=5000)
-    interest_rate_range = st.slider('Interest Rate Range', 0.01, 0.1, (0.07, 0.08), step=0.001)
+    savings_amount = st.slider('Savings Amount', 100000, 1000000, 575000, step=5000)
+    interest_rate_range = st.slider('Interest Rate Range', 0.01, 0.1, (0.075, 0.085), step=0.001)
     down_payment_percentage = st.slider('Down Payment %', 0.1, 0.3, 0.2, step=0.01)
-    closing_cost_percentage_range = st.slider('Closing Cost % Range', 0.0, 0.1, (0.04, 0.07), step=0.01)
-    additional_upfront_costs_range = st.slider('Additional Upfront Costs Range', 0, 100000, (0, 50000), step=5000)
-    annual_base_income_range = st.slider('Annual Base Income Range', 100000, 500000, (250000, 350000), step=10000)
-    annual_base_expense_range = st.slider('Annual Base Expense Range', 50000, 200000, (80000, 150000), step=10000)
-    additional_annual_income_range = st.slider('Additional Annual Income Range', 0, 100000, (0, 50000), step=5000)
-    additional_annual_costs_range = st.slider('Additional Annual Costs Range', 0, 100000, (20000, 80000), step=5000)
+    closing_cost_percentage_range = st.slider('Closing Cost % Range', 0.0, 0.1, (0.04, 0.06), step=0.01)
+    additional_upfront_costs_range = st.slider('Additional Upfront Costs Range', 0, 100000, (0, 20000), step=5000)
+    annual_base_income_range = st.slider('Annual Base Income Range', 100000, 500000, (250000, 300000), step=10000)
+    annual_base_expense_range = st.slider('Annual Base Expense Range', 50000, 200000, (80000, 120000), step=10000)
+    additional_annual_income_range = st.slider('Additional Annual Income Range', 0, 100000, (0, 20000), step=5000)
+    additional_annual_costs_range = st.slider('Additional Annual Costs Range', 0, 100000, (50000, 90000), step=5000)
     property_growth_rate_range = st.slider('Property Growth Rate Range', -0.1, 0.1, (-0.04, 0.06), step=0.01)
     inflation_rate_range = st.slider('Inflation Rate Range', 0.0, 0.1, (0.0, 0.04), step=0.01)
     years = st.slider('Years', 5, 30, 20)
