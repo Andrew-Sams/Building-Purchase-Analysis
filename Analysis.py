@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import numpy_financial as npf
 import matplotlib.pyplot as plt
+import pandas as pd
 from scipy.interpolate import interp1d
 import matplotlib.colors as mcolors
 
@@ -95,6 +96,7 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
         total_annual_base_incomes += income
         total_additional_annual_incomes += additional_annual_income
         total_net_annual_profit += annual_cash_flow
+        
         # Final year sale price calculation with closing costs
         gross_sale_price = purchase_price * (1 + property_growth_rate)**years
         sale_closing_costs = gross_sale_price * 0.06
