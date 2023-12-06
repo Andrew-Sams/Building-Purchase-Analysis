@@ -174,11 +174,11 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
         'Mean Additional Annual Income': mean_additional_annual_incomes,
         'Mean Net Annual Profit': mean_net_annual_profits
     }
-    df = pd.DataFrame(data
+    df = pd.DataFrame(data)
 
     # Transpose the DataFrame to flip the axis
     df = df.T
-                      
+    
     # Display the table in Streamlit
     st.table(df)
 
