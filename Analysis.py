@@ -19,6 +19,11 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
     irrs = []
     count_irr_above_target = 0
 
+    # Initialize accumulators for mean calculations
+    total_down_payments = total_closing_costs = total_additional_upfront_costs = total_net_upfront = 0
+    total_annual_mortgage_payments = total_annual_base_expenses = total_additional_annual_costs = 0
+    total_annual_base_incomes = total_additional_annual_incomes = total_net_annual_profit = 0
+
     for _ in range(total_simulations):
         # Random values within ranges
         income = np.random.uniform(*annual_base_income_range)
@@ -78,7 +83,18 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
                     annual_cash_flow = 0  # All cash flow goes to debt repayment
 
             cash_flows.append(annual_cash_flow)
-
+           
+        # Update accumulators inside the loop
+        total_down_payments += down_payment
+        total_closing_costs += closing_costs
+        total_additional_upfront_costs += additional_upfront_costs
+        total_net_upfront += (savings - initial_outlay)
+        total_annual_mortgage_payments += annual_mortgage_payment
+        total_annual_base_expenses += expense
+        total_additional_annual_costs += additional_annual_costs
+        total_annual_base_incomes += income
+        total_additional_annual_incomes += additional_annual_income
+        total_net_annual_profit += annual_cash_flow
         # Final year sale price calculation with closing costs
         gross_sale_price = purchase_price * (1 + property_growth_rate)**years
         sale_closing_costs = gross_sale_price * 0.06
@@ -102,23 +118,6 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
     favorable_percentage = favorable_outcomes / total_simulations * 100
     average_irr = np.mean(irrs) if irrs else None
     percent_above_target_irr = count_irr_above_target / len(irrs) * 100 if irrs else 0
-
-    # Initialize accumulators for mean calculations
-    total_down_payments = total_closing_costs = total_additional_upfront_costs = total_net_upfront = 0
-    total_annual_mortgage_payments = total_annual_base_expenses = total_additional_annual_costs = 0
-    total_annual_base_incomes = total_additional_annual_incomes = total_net_annual_profit = 0
-
-    # Update accumulators
-    total_down_payments += down_payment
-    total_closing_costs += closing_costs
-    total_additional_upfront_costs += additional_upfront_costs
-    total_net_upfront += (savings - initial_outlay)
-    total_annual_mortgage_payments += annual_mortgage_payment
-    total_annual_base_expenses += expense
-    total_additional_annual_costs += additional_annual_costs
-    total_annual_base_incomes += income
-    total_additional_annual_incomes += additional_annual_income
-    total_net_annual_profit += annual_cash_flow
 
     # Calculate means
     mean_down_payment = total_down_payments / total_simulations
@@ -154,9 +153,9 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
         target_irr
     ) for price in purchase_prices]
 
-    # Extracting the results
-    favorable_percentages, average_irrs, percentages_above_target, mean_values = zip(*results)
-
+    # Ensure correct unpacking
+    favorable_percentages, average_irrs, percentages_above_target, mean_down_payment, mean_closing_costs, mean_additional_upfront_costs, mean_net_upfront, mean_annual_mortgage_payment, mean_annual_base_expense, mean_additional_annual_costs, mean_annual_base_income, mean_additional_annual_income, mean_net_annual_profit = zip(*results)
+    
     # Transpose mean values to align with purchase prices
     transposed_mean_values = list(zip(*mean_values))
 
