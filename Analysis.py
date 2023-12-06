@@ -96,29 +96,63 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
     average_irr = np.mean(irrs) if irrs else None
     percent_above_target_irr = count_irr_above_target / len(irrs) * 100 if irrs else 0
 
-    return favorable_percentage, average_irr, percent_above_target_irr
+    # Initialize accumulators for mean calculations
+    total_down_payments = total_closing_costs = total_additional_upfront_costs = total_net_upfront = 0
+    total_annual_mortgage_payments = total_annual_base_expenses = total_additional_annual_costs = 0
+    total_annual_base_incomes = total_additional_annual_incomes = total_net_annual_profit = 0
+
+    # Update accumulators
+    total_down_payments += down_payment
+    total_closing_costs += closing_costs
+    total_additional_upfront_costs += additional_upfront_costs
+    total_net_upfront += (savings - initial_outlay)
+    total_annual_mortgage_payments += annual_mortgage_payment
+    total_annual_base_expenses += expense
+    total_additional_annual_costs += additional_annual_costs
+    total_annual_base_incomes += income
+    total_additional_annual_incomes += additional_annual_income
+    total_net_annual_profit += annual_cash_flow
+
+    # Calculate means
+    mean_down_payment = total_down_payments / total_simulations
+    mean_closing_costs = total_closing_costs / total_simulations
+    mean_additional_upfront_costs = total_additional_upfront_costs / total_simulations
+    mean_net_upfront = total_net_upfront / total_simulations
+    mean_annual_mortgage_payment = total_annual_mortgage_payments / total_simulations
+    mean_annual_base_expense = total_annual_base_expenses / total_simulations
+    mean_additional_annual_costs = total_additional_annual_costs / total_simulations
+    mean_annual_base_income = total_annual_base_incomes / total_simulations
+    mean_additional_annual_income = total_additional_annual_incomes / total_simulations
+    mean_net_annual_profit = total_net_annual_profit / total_simulations
+
+    return (favorable_percentage, average_irr, percent_above_target_irr, mean_down_payment, mean_closing_costs, mean_additional_upfront_costs, mean_net_upfront, mean_annual_mortgage_payment, mean_annual_base_expense, mean_additional_annual_costs, mean_annual_base_income, mean_additional_annual_income, mean_net_annual_profit)
 
 # Function to update and display plots adapted for Streamlit
 def update_plots(savings_amount, interest_rate_range, down_payment_percentage, closing_cost_percentage_range, additional_upfront_costs_range, annual_base_income_range, annual_base_expense_range, additional_annual_income_range, additional_annual_costs_range, property_growth_rate_range, inflation_rate_range, years, target_irr):
     purchase_prices = np.arange(1_000_000, 4_100_000, 100_000)
-    results_for_savings = [run_simulations_with_savings_check(
-        price,
-        savings_amount,
-        annual_base_income_range,
-        annual_base_expense_range,
-        down_payment_percentage,
-        interest_rate_range,
-        closing_cost_percentage_range,
-        additional_upfront_costs_range,
-        additional_annual_income_range,
-        additional_annual_costs_range,
-        property_growth_rate_range,
-        inflation_rate_range,
-        years,
-        target_irr
-    ) for price in purchase_prices]
+    results = [run_simulations_with_savings_check(...) for price in purchase_prices]
 
-    favorable_percentages, average_irrs, percentages_above_target = zip(*results_for_savings)
+    # Extracting the results
+    favorable_percentages, average_irrs, percentages_above_target, mean_values = zip(*results)
+
+    # Create a DataFrame for displaying the table
+    data = {
+        'Purchase Price': purchase_prices,
+        'Mean Down Payment': mean_values[0],
+        'Mean Closing Costs': mean_values[1],
+        'Mean Additional Upfront Costs': mean_values[2],
+        'Mean Net Upfront (Reserves)': mean_values[3],
+        'Mean Annual Mortgage Payment': mean_values[4],
+        'Mean Annual Base Expenses': mean_values[5],
+        'Mean Additional Annual Costs': mean_values[6],
+        'Mean Annual Base Income': mean_values[7],
+        'Mean Additional Annual Income': mean_values[8],
+        'Mean Net Annual Profit': mean_values[9]
+    }
+    df = pd.DataFrame(data)
+
+    # Display the table in Streamlit
+    st.table(df)
 
     # Plotting logic adapted for Streamlit
     fig, axs = plt.subplots(2, 1, figsize=(10, 16))
@@ -141,15 +175,15 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
 
 # Interactive Inputs Function
 def interactive_inputs():
-    savings_amount = st.slider('Savings Amount', 100000, 1000000, 600000, step=10000)
-    interest_rate_range = st.slider('Interest Rate Range', 0.01, 0.1, (0.07, 0.08), step=0.01)
+    savings_amount = st.slider('Savings Amount', 100000, 1000000, 600000, step=5000)
+    interest_rate_range = st.slider('Interest Rate Range', 0.01, 0.1, (0.07, 0.08), step=0.001)
     down_payment_percentage = st.slider('Down Payment %', 0.1, 0.3, 0.2, step=0.01)
     closing_cost_percentage_range = st.slider('Closing Cost % Range', 0.0, 0.1, (0.04, 0.07), step=0.01)
     additional_upfront_costs_range = st.slider('Additional Upfront Costs Range', 0, 100000, (0, 50000), step=5000)
     annual_base_income_range = st.slider('Annual Base Income Range', 100000, 500000, (250000, 350000), step=10000)
     annual_base_expense_range = st.slider('Annual Base Expense Range', 50000, 200000, (80000, 150000), step=10000)
     additional_annual_income_range = st.slider('Additional Annual Income Range', 0, 100000, (0, 50000), step=5000)
-    additional_annual_costs_range = st.slider('Additional Annual Costs Range', 10000, 100000, (20000, 80000), step=5000)
+    additional_annual_costs_range = st.slider('Additional Annual Costs Range', 0, 100000, (20000, 80000), step=5000)
     property_growth_rate_range = st.slider('Property Growth Rate Range', -0.1, 0.1, (-0.04, 0.06), step=0.01)
     inflation_rate_range = st.slider('Inflation Rate Range', 0.0, 0.1, (0.0, 0.04), step=0.01)
     years = st.slider('Years', 5, 30, 20)
