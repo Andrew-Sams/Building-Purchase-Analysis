@@ -190,7 +190,7 @@ def update_plots(savings_amount, interest_rate_range, down_payment_percentage, c
     formatted_df = formatted_df.apply(bold_rows, axis=1)
     
     # Display the table in Streamlit
-    st.table(formatted_df)
+    st.dataframe(formatted_df)
 
     # Plotting logic adapted for Streamlit
     fig, axs = plt.subplots(2, 1, figsize=(10, 16))
