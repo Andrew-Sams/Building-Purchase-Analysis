@@ -51,8 +51,8 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
         annual_cash_flow = 0  # Initial value set to zero
 
         # Check if savings are sufficient for initial outlay
-        if savings < initial_outlay:
-            continue  # Skip simulation as it's unfavorable
+        #if savings < initial_outlay:
+            #continue  # Skip simulation as it's unfavorable
 
         cash_flows = [-initial_outlay]
         debt = 0
