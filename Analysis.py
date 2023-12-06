@@ -43,12 +43,12 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
         closing_costs = loan_amount * closing_cost_percentage
         initial_outlay = down_payment + closing_costs + additional_upfront_costs
 
-        # Calculate monthly mortgage payment
+        # Calculate monthly mortgage payment and annual mortgage payment
         monthly_mortgage = calculate_mortgage(loan_amount, interest_rate)
         annual_mortgage_payment = monthly_mortgage * 12
 
         # Initialize annual_cash_flow
-        annual_cash_flow = 0
+        annual_cash_flow = 0  # Initial value set to zero
 
         # Check if savings are sufficient for initial outlay
         if savings < initial_outlay:
@@ -138,28 +138,27 @@ def run_simulations_with_savings_check(purchase_price, savings, annual_base_inco
 # Function to update and display plots adapted for Streamlit
 def update_plots(savings_amount, interest_rate_range, down_payment_percentage, closing_cost_percentage_range, additional_upfront_costs_range, annual_base_income_range, annual_base_expense_range, additional_annual_income_range, additional_annual_costs_range, property_growth_rate_range, inflation_rate_range, years, target_irr):
     purchase_prices = np.arange(1_800_000, 3_100_000, 100_000)
-    results = []
-    for price in purchase_prices:
-        result = run_simulations_with_savings_check(
-            price,
-            savings_amount,
-            annual_base_income_range,
-            annual_base_expense_range,
-            down_payment_percentage,
-            interest_rate_range,
-            closing_cost_percentage_range,
-            additional_upfront_costs_range,
-            additional_annual_income_range,
-            additional_annual_costs_range,
-            property_growth_rate_range,
-            inflation_rate_range,
-            years,
-            target_irr
-        )
-        results.append(result)
+    results = [run_simulations_with_savings_check(
+        price,
+        savings_amount,
+        annual_base_income_range,
+        annual_base_expense_range,
+        down_payment_percentage,
+        interest_rate_range,
+        closing_cost_percentage_range,
+        additional_upfront_costs_range,
+        additional_annual_income_range,
+        additional_annual_costs_range,
+        property_growth_rate_range,
+        inflation_rate_range,
+        years,
+        target_irr
+    ) for price in purchase_prices]
 
-    # Unpack results
-    favorable_percentages, average_irrs, percentages_above_target_irr, mean_down_payments, mean_closing_costs, mean_additional_upfront_costs, mean_net_upfronts, mean_annual_mortgage_payments, mean_annual_base_expenses, mean_additional_annual_costs, mean_annual_base_incomes, mean_additional_annual_incomes, mean_net_annual_profits = zip(*results)
+    # Unpacking the results
+    (favorable_percentages, average_irrs, percentages_above_target_irr, mean_down_payments, mean_closing_costs, 
+     mean_additional_upfront_costs, mean_net_upfronts, mean_annual_mortgage_payments, mean_annual_base_expenses, 
+     mean_additional_annual_costs, mean_annual_base_incomes, mean_additional_annual_incomes, mean_net_annual_profits) = zip(*results)
 
     # Create a DataFrame for displaying the table
     data = {
